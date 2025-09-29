@@ -6,5 +6,17 @@ router.post(
     "/",
     UserController.createUser
 )
+router.get(
+    "/",
+    UserController.getAllUsers
+)
+router.patch(
+    "/:id",
+    UserController.updateUser
+)
+router.delete(
+    "/:id",
+    UserController.deleteUser
+)
 
 export const userRouter = router
