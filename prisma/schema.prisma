@@ -1,8 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
@@ -23,19 +19,101 @@ model User {
   role       Role       @default(ADMIN)
   phone      String
   picture    String?
-  status     UserStatus @default(ACTIVE)
   isVerified Boolean    @default(false)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-
+  blog  Blog[]
+  project    Project[]
+  skill Skill []
+  education Education[]
+  experience Experience[]
+  resume Resume[]
 }
 enum Role {
     ADMIN
-   
+}
+model Resume {
+  id        Int      @id @default(autoincrement())
+  fileUrl   String   // storage URL বা public path
+  fileName  String?  // original filename (optional)
+  mimeType  String?  // e.g. application/pdf
+  size      Int?     // bytes
+  userId    Int      
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-enum UserStatus {
-  ACTIVE
-  INACTIVE
-  BLOCK
+
+
+model Blog {
+  id         Int      @id @default(autoincrement())
+  title      String
+  content    String
+  thumbnail  String?
+  isFeatured Boolean  @default(false)
+  tags       String[]
+  views      Int      @default(0)
+  authorId   Int
+  author     User     @relation(fields: [authorId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Project {
+  id         Int      @id @default(autoincrement())
+  title      String
+  description    String
+  thumbnail  String?
+  liveLink String?
+  projectLink String?
+  isFeatured Boolean  @default(false)
+  tags       String[]
+  views      Int      @default(0)
+  authorId   Int
+  author     User     @relation(fields: [authorId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+
+model Skill {
+  id         Int      @id @default(autoincrement())
+  name       String   
+  level      String?  
+  category   String?  
+  icon       String?  
+  authorId   Int
+  author     User     @relation(fields: [authorId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Education {
+  id          Int      @id @default(autoincrement())
+  institution String  
+  degree      String   
+  field       String? 
+  startDate   DateTime
+  endDate     DateTime?
+  description String?  
+  authorId    Int
+  author      User     @relation(fields: [authorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Experience {
+  id          Int      @id @default(autoincrement())
+  company     String  
+  position    String   
+  location    String? 
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean  @default(false) 
+  description String? 
+  authorId    Int
+  author      User     @relation(fields: [authorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

@@ -3,10 +3,16 @@ import { UserService } from "./user.service";
 // create
 const createUser = async (req:Request,res:Response)=>{
     try {
-        const result = await UserService.createUser(req.body)
-        res.status(201).json(result)
+          const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
+        const payload={
+            ...bodyData,
+            picture:req.file?.path
+        }
+        const result = await UserService.createUser(payload)
+        res.status(201).json({data:result})
     } catch (error) {
               res.status(500).send(error)
+              console.log(error)
     }
 }
 // get all users
