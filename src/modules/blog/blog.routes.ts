@@ -13,18 +13,18 @@ router.get(
     "/",
     BlogController.getAllBlogs
 )
-// router.get(
-//     "/:id",
-//     UserController.getUserById
-// )
-// router.patch(
-//     "/:id",
-//      multerUpload.single("file"),
-//     UserController.updateUser
-// )
-// router.delete(
-//     "/:id",
-//     UserController.deleteUser
-// )
+router.get(
+    "/:id",
+    BlogController.getBlogById
+)
+router.patch(
+    "/:id",
+     multerUpload.single("file"),
+    BlogController.updateBlog
+)
+router.delete(
+    "/:id",
+    BlogController.deleteBlog
+)
 
 export const blogRouter = router

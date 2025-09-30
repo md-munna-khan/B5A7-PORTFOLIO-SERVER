@@ -16,7 +16,7 @@ const result = await prisma.blog.create({
         }
     }
 })
-console.log(result)
+
 return result
 }
 // get all blogs
@@ -74,7 +74,50 @@ const getAllBlogs = async ({
     };
 };
 
+// get blog by id
+const getBlogById = async (id: number) => {
+    return await prisma.$transaction(async (tx) => {
+        await tx.blog.update({
+            where: { id },
+            data: {
+                views: {
+                    increment: 1
+                }
+            }
+        });
+
+        return await tx.blog.findUnique({
+            where: { id },
+            include: { author: true },
+        });
+    })
+};
+
+// updated users
+const updateBlog = async(id:number,payload:Partial<Blog>)=>{
+  const result = await prisma.blog.update({
+    where:{
+      id
+    },
+    data:payload
+  })
+  return result
+}
+// delete blog
+const deleteBlog = async(id:number)=>{
+  const result = await prisma.blog.delete({
+    where:{
+      id
+    }
+  })
+  return result
+}
+
+
 export const BlogServices ={
     createBlog,
-    getAllBlogs
+    getAllBlogs,
+    getBlogById,
+    deleteBlog,
+    updateBlog
 }

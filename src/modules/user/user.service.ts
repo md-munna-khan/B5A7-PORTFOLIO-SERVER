@@ -62,7 +62,7 @@ const deleteUser = async(id:number)=>{
   })
   return result
 }
-// delete user
+// get user by id
 const getUserById = async(id:number)=>{
   const result = await prisma.user.findUnique({
     where:{
