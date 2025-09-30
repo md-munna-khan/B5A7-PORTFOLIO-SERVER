@@ -12,8 +12,13 @@ router.get(
     "/",
     UserController.getAllUsers
 )
+router.get(
+    "/:id",
+    UserController.getUserById
+)
 router.patch(
     "/:id",
+     multerUpload.single("file"),
     UserController.updateUser
 )
 router.delete(

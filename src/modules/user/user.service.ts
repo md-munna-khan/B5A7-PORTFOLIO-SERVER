@@ -62,9 +62,19 @@ const deleteUser = async(id:number)=>{
   })
   return result
 }
+// delete user
+const getUserById = async(id:number)=>{
+  const result = await prisma.user.findUnique({
+    where:{
+      id
+    }
+  })
+  return result
+}
 export const UserService={
   createUser,
   getAllUsers,
   updateUser,
-  deleteUser
+  deleteUser,
+  getUserById
 }
