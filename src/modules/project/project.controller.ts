@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import { BlogServices } from "./blog.service";
+
 import { deleteImageFromCloudinary } from "../../config/cloudinary.config";
+import { ProjectServices } from "./project.service";
 
-
-const createBlog = async (req: Request, res: Response) => {
+// create
+const createProject= async (req: Request, res: Response) => {
     try {
 const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
           const payload={
@@ -12,14 +13,14 @@ const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
            
         }
         
-        const result = await BlogServices.createBlog(payload)
+        const result = await  ProjectServices.createProject(payload)
         res.status(201).json({data:result});
     } catch (error) {
         res.status(500).send(error)
     }
 }
-
-const getAllBlogs = async (req: Request, res: Response) => {
+// get all
+const getAllProjects = async (req: Request, res: Response) => {
     try {
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 10;
@@ -27,25 +28,25 @@ const getAllBlogs = async (req: Request, res: Response) => {
         const isFeatured = req.query.isFeatured ? req.query.isFeatured === "true" : undefined
         const tags = req.query.tags ? (req.query.tags as string).split(",") : []
 
-        const result = await BlogServices.getAllBlogs({ page, limit, search, isFeatured, tags });
+        const result = await  ProjectServices.getAllProjects({ page, limit, search, isFeatured, tags });
         res.json(result);
     } catch (err) {
         res.status(500).json({ error: "Failed to fetch posts", details: err });
     }
 };
-// get blog by id
-const getBlogById = async (req: Request, res: Response) => {
-    const post = await BlogServices.getBlogById(Number(req.params.id));
+// get by id
+const getProjectById = async (req: Request, res: Response) => {
+    const post = await  ProjectServices.getProjectById(Number(req.params.id));
     if (!post) return res.status(404).json({ error: "Post not found" });
     res.json(post);
 };
 
 
-// update users
-const   updateBlog= async (req:Request,res:Response)=>{
+// update 
+const   updateProject= async (req:Request,res:Response)=>{
     try {
 const id = Number(req.params.id);
-const existingUser = await BlogServices.getBlogById(id)
+const existingUser = await  ProjectServices.getProjectById(id)
 
    if (req.file && existingUser?.thumbnail) {
       await deleteImageFromCloudinary(existingUser.thumbnail);
@@ -53,28 +54,28 @@ const existingUser = await BlogServices.getBlogById(id)
      const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
         const payload={
             ...bodyData,
-             thumbnail:req.file?.path
+            thumbnail:req.file?.path
         }
-        const result = await BlogServices.updateBlog(Number(req.params.id),payload)
+        const result = await  ProjectServices.updateProject(Number(req.params.id),payload)
         res.status(201).json(result)
     } catch (error) {
               res.status(500).send(error)
     }
 }
-// delete users
-const   deleteBlog = async (req:Request,res:Response)=>{
+// delete 
+const  deleteProject = async (req:Request,res:Response)=>{
     try {
 
-        const result = await BlogServices.deleteBlog(Number(req.params.id))
+        const result = await  ProjectServices.deleteProject(Number(req.params.id))
         res.status(201).json(result)
     } catch (error) {
               res.status(500).send(error)
     }
 }
-export const BlogController ={
-createBlog,
-getAllBlogs,
-getBlogById,
-updateBlog,
-deleteBlog
+export const ProjectController ={
+createProject,
+getAllProjects,
+getProjectById,
+updateProject,
+deleteProject
 }
