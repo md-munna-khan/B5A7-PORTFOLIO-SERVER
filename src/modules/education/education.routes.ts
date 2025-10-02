@@ -1,6 +1,6 @@
 import express from "express"
 
-import { multerUpload } from "../../config/multer.config";
+
 import { EducationController } from "./education.controller";
 
 const router = express.Router();
