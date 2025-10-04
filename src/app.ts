@@ -7,6 +7,7 @@ import { projectRouter } from "./modules/project/project.routes";
 import { skillRouter } from "./modules/skill/skill.routes";
 import { educationRouter } from "./modules/education/education.routes";
 import { experienceRouter } from "./modules/experience/experience.routes";
+import { authRouter } from "./modules/auth/auth.routes";
 
 
 const app = express();
@@ -29,6 +30,7 @@ app.use("/api/v1/project", projectRouter);
 app.use("/api/v1/skill", skillRouter);
 app.use("/api/v1/education", educationRouter);
 app.use("/api/v1/experience", experienceRouter);
+app.use("/api/v1/auth/login", authRouter);
 
 // Default route for testing
 app.get("/", (_req, res) => {
