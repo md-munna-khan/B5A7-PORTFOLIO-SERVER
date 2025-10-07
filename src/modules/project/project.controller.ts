@@ -7,10 +7,12 @@ import { ProjectServices } from "./project.service";
 const createProject= async (req: Request, res: Response) => {
     try {
 const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
-          const payload={
+        const payload={
             ...bodyData,
-            thumbnail:req.file?.path,
-           
+    authorId: parseInt(req.body.authorId), 
+      tags: req.body.tags ? JSON.parse(req.body.tags) : [],
+      isFeatured: req.body.isFeatured === "true",
+      thumbnail: req.file?.path || null,
         }
         
         const result = await  ProjectServices.createProject(payload)
@@ -52,9 +54,12 @@ const existingUser = await  ProjectServices.getProjectById(id)
       await deleteImageFromCloudinary(existingUser.thumbnail);
     }
      const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
-        const payload={
+          const payload={
             ...bodyData,
-            thumbnail:req.file?.path
+    authorId: parseInt(req.body.authorId), 
+      tags: req.body.tags ? JSON.parse(req.body.tags) : [],
+      isFeatured: req.body.isFeatured === "true",
+      thumbnail: req.file?.path || null,
         }
         const result = await  ProjectServices.updateProject(Number(req.params.id),payload)
         res.status(201).json(result)

@@ -6,16 +6,20 @@ import { deleteImageFromCloudinary } from "../../config/cloudinary.config";
 const createBlog = async (req: Request, res: Response) => {
     try {
 const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
+
           const payload={
             ...bodyData,
-            thumbnail:req.file?.path,
-           
+    authorId: parseInt(req.body.authorId), 
+      tags: req.body.tags ? JSON.parse(req.body.tags) : [],
+      isFeatured: req.body.isFeatured === "true",
+      thumbnail: req.file?.path || null,
         }
         
         const result = await BlogServices.createBlog(payload)
         res.status(201).json({data:result});
     } catch (error) {
         res.status(500).send(error)
+        console.log(error)
     }
 }
 
@@ -51,9 +55,14 @@ const existingUser = await BlogServices.getBlogById(id)
       await deleteImageFromCloudinary(existingUser.thumbnail);
     }
      const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
-        const payload={
+    
+          const payload={
+       
             ...bodyData,
-             thumbnail:req.file?.path
+    authorId: parseInt(req.body.authorId), 
+      tags: req.body.tags ? JSON.parse(req.body.tags) : [],
+      isFeatured: req.body.isFeatured === "true",
+      thumbnail: req.file?.path || null,
         }
         const result = await BlogServices.updateBlog(Number(req.params.id),payload)
         res.status(201).json(result)

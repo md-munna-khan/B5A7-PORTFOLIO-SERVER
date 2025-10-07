@@ -30,7 +30,7 @@ app.use("/api/v1/project", projectRouter);
 app.use("/api/v1/skill", skillRouter);
 app.use("/api/v1/education", educationRouter);
 app.use("/api/v1/experience", experienceRouter);
-app.use("/api/v1/auth/login", authRouter);
+app.use("/api/v1/auth", authRouter);
 
 // Default route for testing
 app.get("/", (_req, res) => {
