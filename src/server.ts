@@ -2,6 +2,7 @@ import http, { Server } from "http";
 import app from "./app";
 import dotenv from "dotenv";
 import { prisma } from "./config/db";
+import { seedAdmin } from "./utils/seedAdmin";
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ async function connectToDB() {
 
 async function startServer() {
   await connectToDB();
-
+  await seedAdmin();
   if (!process.env.VERCEL) {
     const PORT = process.env.PORT || 5000;
     server = http.createServer(app);

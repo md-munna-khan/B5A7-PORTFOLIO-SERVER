@@ -38,29 +38,8 @@ The backend communicates with a **Next.js frontend** and stores persistent data 
 | Middleware | cors, compression, express.json |
 | Deployment | Vercel (Serverless Functions) |
 
----
 
-## 📁 Folder Structure
 
-src/
-├── config/
-│ └── multer.config.ts
-├── modules/
-│ ├── auth/
-│ │ ├── auth.controller.ts
-│ │ ├── auth.routes.ts
-│ ├── blog/
-│ │ ├── blog.controller.ts
-│ │ ├── blog.routes.ts
-│ ├── project/
-│ │ ├── project.controller.ts
-│ │ ├── project.routes.ts
-│ ├── skill/
-│ ├── education/
-│ ├── experience/
-│ └── user/
-├── app.ts
-└── server.ts
 
 
 
