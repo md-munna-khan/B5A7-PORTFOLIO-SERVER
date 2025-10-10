@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthService = void 0;
+exports.AuthServices = void 0;
 const db_1 = require("../../config/db");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const loginWithEmailAndPassword = (_a) => __awaiter(void 0, [_a], void 0, function* ({ email, password }) {
@@ -43,7 +43,7 @@ const authWithGoogle = (data) => __awaiter(void 0, void 0, void 0, function* () 
     }
     return user;
 });
-exports.AuthService = {
+exports.AuthServices = {
     loginWithEmailAndPassword,
     authWithGoogle
 };

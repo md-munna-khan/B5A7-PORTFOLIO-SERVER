@@ -15,11 +15,12 @@ const experience_routes_1 = require("./modules/experience/experience.routes");
 const auth_routes_1 = require("./modules/auth/auth.routes");
 const app = (0, express_1.default)();
 // Middleware
-app.use((0, cors_1.default)()); // Enables Cross-Origin Resource Sharing
+// app.use(cors()); // Enables Cross-Origin Resource Sharing
 app.use((0, compression_1.default)()); // Compresses response bodies for faster delivery
 app.use(express_1.default.json()); // Parse incoming JSON requests
 app.use((0, cors_1.default)({
-    origin: "http://localhost:3000",
+    // origin: "http://localhost:3000",
+    origin: "https://munna-mia.vercel.app",
     credentials: true,
 }));
 app.use("/api/v1/user", user_routes_1.userRouter);
@@ -28,7 +29,7 @@ app.use("/api/v1/project", project_routes_1.projectRouter);
 app.use("/api/v1/skill", skill_routes_1.skillRouter);
 app.use("/api/v1/education", education_routes_1.educationRouter);
 app.use("/api/v1/experience", experience_routes_1.experienceRouter);
-app.use("/api/v1/auth", auth_routes_1.authRouter);
+app.use("/api/v1/auth", auth_routes_1.AuthRouter);
 // Default route for testing
 app.get("/", (_req, res) => {
     res.send("API is running");

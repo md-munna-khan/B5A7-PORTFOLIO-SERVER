@@ -46,30 +46,51 @@ const getBlogById = async (req: Request, res: Response) => {
 
 
 // update users
-const   updateBlog= async (req:Request,res:Response)=>{
-    try {
-const id = Number(req.params.id);
-const existingUser = await BlogServices.getBlogById(id)
+const updateBlog = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const existingBlog = await BlogServices.getBlogById(id);
 
-   if (req.file && existingUser?.thumbnail) {
-      await deleteImageFromCloudinary(existingUser.thumbnail);
+    if (!existingBlog) {
+      return res.status(404).json({ message: "Blog not found" });
     }
-     const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
-    
-          const payload={
-       
-            ...bodyData,
-    authorId: parseInt(req.body.authorId), 
+
+  
+    if (req.file && existingBlog?.thumbnail) {
+      await deleteImageFromCloudinary(existingBlog.thumbnail);
+    }
+
+   
+    const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
+
+
+    const payload = {
+      ...bodyData,
+      authorId: parseInt(req.body.authorId),
       tags: req.body.tags ? JSON.parse(req.body.tags) : [],
       isFeatured: req.body.isFeatured === "true",
-      thumbnail: req.file?.path || null,
-        }
-        const result = await BlogServices.updateBlog(Number(req.params.id),payload)
-        res.status(201).json(result)
-    } catch (error) {
-              res.status(500).send(error)
-    }
-}
+
+      thumbnail: req.file?.path || existingBlog.thumbnail,
+    };
+
+    // ✅ update call
+    const result = await BlogServices.updateBlog(id, payload);
+
+    return res.status(200).json({
+      success: true,
+      message: "📝 Blog updated successfully!",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Blog update error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong during blog update",
+      error,
+    });
+  }
+};
+
 // delete users
 const   deleteBlog = async (req:Request,res:Response)=>{
     try {

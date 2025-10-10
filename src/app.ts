@@ -7,19 +7,20 @@ import { projectRouter } from "./modules/project/project.routes";
 import { skillRouter } from "./modules/skill/skill.routes";
 import { educationRouter } from "./modules/education/education.routes";
 import { experienceRouter } from "./modules/experience/experience.routes";
-import { authRouter } from "./modules/auth/auth.routes";
+import { AuthRouter } from "./modules/auth/auth.routes";
 
 
 const app = express();
 
 // Middleware
-app.use(cors()); // Enables Cross-Origin Resource Sharing
+// app.use(cors()); // Enables Cross-Origin Resource Sharing
 app.use(compression()); // Compresses response bodies for faster delivery
 app.use(express.json()); // Parse incoming JSON requests
 
 app.use(
   cors({
     origin: "http://localhost:3000",
+    // origin: "https://munna-mia.vercel.app",
     credentials: true,
   })
 );
@@ -30,7 +31,7 @@ app.use("/api/v1/project", projectRouter);
 app.use("/api/v1/skill", skillRouter);
 app.use("/api/v1/education", educationRouter);
 app.use("/api/v1/experience", experienceRouter);
-app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/auth", AuthRouter);
 
 // Default route for testing
 app.get("/", (_req, res) => {

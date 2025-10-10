@@ -48,21 +48,57 @@ const getProjectById = (req, res) => __awaiter(void 0, void 0, void 0, function*
     res.json(post);
 });
 // update 
+// const   updateProject= async (req:Request,res:Response)=>{
+//     try {
+// const id = Number(req.params.id);
+// const existingUser = await  ProjectServices.getProjectById(id)
+//    if (req.file && existingUser?.thumbnail) {
+//       await deleteImageFromCloudinary(existingUser.thumbnail);
+//     }
+//      const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
+//           const payload={
+//             ...bodyData,
+//     authorId: parseInt(req.body.authorId), 
+//       tags: req.body.tags ? JSON.parse(req.body.tags) : [],
+//       isFeatured: req.body.isFeatured === "true",
+//       thumbnail: req.file?.path || null,
+//         }
+//         const result = await  ProjectServices.updateProject(Number(req.params.id),payload)
+//         res.status(201).json(result)
+//     } catch (error) {
+//               res.status(500).send(error)
+//     }
+// }
 const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     try {
         const id = Number(req.params.id);
-        const existingUser = yield project_service_1.ProjectServices.getProjectById(id);
-        if (req.file && (existingUser === null || existingUser === void 0 ? void 0 : existingUser.thumbnail)) {
-            yield (0, cloudinary_config_1.deleteImageFromCloudinary)(existingUser.thumbnail);
+        const existingProject = yield project_service_1.ProjectServices.getProjectById(id);
+        if (!existingProject) {
+            return res.status(404).json({ message: "Project not found" });
         }
+        if (req.file && (existingProject === null || existingProject === void 0 ? void 0 : existingProject.thumbnail)) {
+            yield (0, cloudinary_config_1.deleteImageFromCloudinary)(existingProject.thumbnail);
+        }
+        // ✅ body data parse করো
         const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
-        const payload = Object.assign(Object.assign({}, bodyData), { authorId: parseInt(req.body.authorId), tags: req.body.tags ? JSON.parse(req.body.tags) : [], isFeatured: req.body.isFeatured === "true", thumbnail: ((_a = req.file) === null || _a === void 0 ? void 0 : _a.path) || null });
-        const result = yield project_service_1.ProjectServices.updateProject(Number(req.params.id), payload);
-        res.status(201).json(result);
+        const payload = Object.assign(Object.assign({}, bodyData), { authorId: parseInt(req.body.authorId), tags: req.body.tags ? JSON.parse(req.body.tags) : [], isFeatured: req.body.isFeatured === "true", thumbnail: req.file
+                ? req.file.path
+                : existingProject.thumbnail });
+        // ✅ Update project
+        const result = yield project_service_1.ProjectServices.updateProject(id, payload);
+        res.status(200).json({
+            success: true,
+            message: "Project updated successfully!",
+            data: result,
+        });
     }
     catch (error) {
-        res.status(500).send(error);
+        console.error("Project update error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong during project update",
+            error,
+        });
     }
 });
 // delete 

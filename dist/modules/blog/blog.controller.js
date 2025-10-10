@@ -51,17 +51,30 @@ const updateBlog = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     var _a;
     try {
         const id = Number(req.params.id);
-        const existingUser = yield blog_service_1.BlogServices.getBlogById(id);
-        if (req.file && (existingUser === null || existingUser === void 0 ? void 0 : existingUser.thumbnail)) {
-            yield (0, cloudinary_config_1.deleteImageFromCloudinary)(existingUser.thumbnail);
+        const existingBlog = yield blog_service_1.BlogServices.getBlogById(id);
+        if (!existingBlog) {
+            return res.status(404).json({ message: "Blog not found" });
+        }
+        if (req.file && (existingBlog === null || existingBlog === void 0 ? void 0 : existingBlog.thumbnail)) {
+            yield (0, cloudinary_config_1.deleteImageFromCloudinary)(existingBlog.thumbnail);
         }
         const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
-        const payload = Object.assign(Object.assign({}, bodyData), { authorId: parseInt(req.body.authorId), tags: req.body.tags ? JSON.parse(req.body.tags) : [], isFeatured: req.body.isFeatured === "true", thumbnail: ((_a = req.file) === null || _a === void 0 ? void 0 : _a.path) || null });
-        const result = yield blog_service_1.BlogServices.updateBlog(Number(req.params.id), payload);
-        res.status(201).json(result);
+        const payload = Object.assign(Object.assign({}, bodyData), { authorId: parseInt(req.body.authorId), tags: req.body.tags ? JSON.parse(req.body.tags) : [], isFeatured: req.body.isFeatured === "true", thumbnail: ((_a = req.file) === null || _a === void 0 ? void 0 : _a.path) || existingBlog.thumbnail });
+        // ✅ update call
+        const result = yield blog_service_1.BlogServices.updateBlog(id, payload);
+        return res.status(200).json({
+            success: true,
+            message: "📝 Blog updated successfully!",
+            data: result,
+        });
     }
     catch (error) {
-        res.status(500).send(error);
+        console.error("Blog update error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong during blog update",
+            error,
+        });
     }
 });
 // delete users

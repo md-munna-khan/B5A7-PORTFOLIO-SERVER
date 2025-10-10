@@ -45,28 +45,75 @@ const getProjectById = async (req: Request, res: Response) => {
 
 
 // update 
-const   updateProject= async (req:Request,res:Response)=>{
-    try {
-const id = Number(req.params.id);
-const existingUser = await  ProjectServices.getProjectById(id)
+// const   updateProject= async (req:Request,res:Response)=>{
+//     try {
+// const id = Number(req.params.id);
+// const existingUser = await  ProjectServices.getProjectById(id)
 
-   if (req.file && existingUser?.thumbnail) {
-      await deleteImageFromCloudinary(existingUser.thumbnail);
+//    if (req.file && existingUser?.thumbnail) {
+//       await deleteImageFromCloudinary(existingUser.thumbnail);
+//     }
+//      const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
+//           const payload={
+//             ...bodyData,
+//     authorId: parseInt(req.body.authorId), 
+//       tags: req.body.tags ? JSON.parse(req.body.tags) : [],
+//       isFeatured: req.body.isFeatured === "true",
+//       thumbnail: req.file?.path || null,
+//         }
+//         const result = await  ProjectServices.updateProject(Number(req.params.id),payload)
+//         res.status(201).json(result)
+//     } catch (error) {
+//               res.status(500).send(error)
+//     }
+// }
+
+const updateProject = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const existingProject = await ProjectServices.getProjectById(id);
+
+    if (!existingProject) {
+      return res.status(404).json({ message: "Project not found" });
     }
-     const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
-          const payload={
-            ...bodyData,
-    authorId: parseInt(req.body.authorId), 
+
+  
+    if (req.file && existingProject?.thumbnail) {
+      await deleteImageFromCloudinary(existingProject.thumbnail);
+    }
+
+    // ✅ body data parse করো
+    const bodyData = req.body.data ? JSON.parse(req.body.data) : req.body;
+
+    
+    const payload = {
+      ...bodyData,
+      authorId: parseInt(req.body.authorId),
       tags: req.body.tags ? JSON.parse(req.body.tags) : [],
       isFeatured: req.body.isFeatured === "true",
-      thumbnail: req.file?.path || null,
-        }
-        const result = await  ProjectServices.updateProject(Number(req.params.id),payload)
-        res.status(201).json(result)
-    } catch (error) {
-              res.status(500).send(error)
-    }
-}
+      thumbnail: req.file
+        ? req.file.path 
+        : existingProject.thumbnail,
+    };
+
+    // ✅ Update project
+    const result = await ProjectServices.updateProject(id, payload);
+
+    res.status(200).json({
+      success: true,
+      message: "Project updated successfully!",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Project update error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong during project update",
+      error,
+    });
+  }
+};
+
 // delete 
 const  deleteProject = async (req:Request,res:Response)=>{
     try {
